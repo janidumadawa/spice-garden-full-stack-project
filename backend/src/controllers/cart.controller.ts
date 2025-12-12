@@ -104,7 +104,7 @@ export const getCartItems = async (req: any, res: Response) => { // Use 'any' or
         let totalQuantity = 0;
         let totalPrice = 0;
         
-        items.forEach(item => {
+        items.forEach((item:any) => {
             totalQuantity += item.quantity;
             totalPrice += item.quantity * item.unitPrice;
         });

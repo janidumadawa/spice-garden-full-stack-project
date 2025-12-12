@@ -47,7 +47,7 @@ export const placeOrder = async (req: any, res: Response) => {
 
         // Step 2: Calculate total amount
         let subtotal = 0;
-        cart.items.forEach(item => {
+        cart.items.forEach((item: any) => {
             subtotal += item.quantity * item.unitPrice;
         });
 
@@ -83,7 +83,7 @@ export const placeOrder = async (req: any, res: Response) => {
         }
 
         // Step 5: Clear user cart completely
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: any) => {
         await tx.cartItem.deleteMany({
             where: { cartId: cart.id },
         });

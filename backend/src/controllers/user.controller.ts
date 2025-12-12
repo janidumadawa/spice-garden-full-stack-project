@@ -30,7 +30,7 @@ export const getUsers = async (req: Request, res: Response) => {
   const users = await prisma.user.findMany()
 
   // Remove passwords from response
-  const usersWithoutPasswords = users.map( user => {
+  const usersWithoutPasswords = users.map( (user: any) => {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   });
