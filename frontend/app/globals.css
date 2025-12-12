@@ -1,0 +1,72 @@
+/* app/globals.css - Tailwind v4 version */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-text-dark: #2F2F2F;
+  --color-primary-red: #C41E3A;
+  --color-primary-gold: #D4AF37;
+  --color-cream-bg: #FFF8E7;
+  --color-success-green: #228B22;
+  --color-warm-yellow: #F0BB3A;
+  
+  /* Fonts */
+  --font-playfair: 'Playfair Display', serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-inter);
+  color: var(--color-text-dark);
+  background-color: var(--color-cream-bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair);
+  font-weight: bold;
+}
+
+/* Custom classes */
+.btn-primary {
+  background-color: var(--color-primary-red);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  background-color: color-mix(in srgb, var(--color-primary-red) 90%, black);
+}
+
+.btn-secondary {
+  background-color: var(--color-primary-gold);
+  color: var(--color-text-dark);
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: scale(1.05);
+  background-color: color-mix(in srgb, var(--color-primary-gold) 90%, black);
+}
+
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-0.5rem);
+}
