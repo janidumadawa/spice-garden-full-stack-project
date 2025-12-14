@@ -1,6 +1,8 @@
 // backend/src/controllers/order.controller.ts
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { CartItem, Prisma } from "@prisma/client";
+
 
 const prisma = new PrismaClient();
 
@@ -47,7 +49,7 @@ export const placeOrder = async (req: any, res: Response) => {
 
         // Step 2: Calculate total amount
         let subtotal = 0;
-        cart.items.forEach((item: any) => {
+        cart.items.forEach((item: CartItem) => {
             subtotal += item.quantity * item.unitPrice;
         });
 
@@ -83,7 +85,7 @@ export const placeOrder = async (req: any, res: Response) => {
         }
 
         // Step 5: Clear user cart completely
-        await prisma.$transaction(async (tx: any) => {
+        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         await tx.cartItem.deleteMany({
             where: { cartId: cart.id },
         });

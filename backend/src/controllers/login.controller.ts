@@ -1,41 +1,64 @@
-// backend/src/controllers/login.controller.ts
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt"; 
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
 export const loginUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
     try {
-        //find uswer by email
+        const { email, password } = req.body;
+
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ 
+                message: "Email and password are required" 
+            });
+        }
+
+        // Find user by email
         const user = await prisma.user.findUnique({
             where: { email }
         });
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(401).json({ 
+                message: "Invalid email or password" 
+            });
         }
 
-        //compare passwords
+        // Verify JWT_SECRET is set
+        if (!process.env.JWT_SECRET) {
+            console.error("ERROR: JWT_SECRET is not set in environment variables");
+            return res.status(500).json({ 
+                message: "Server configuration error" 
+            });
+        }
+
+        // Compare passwords using bcrypt
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ 
+                message: "Invalid email or password" 
+            });
         }
 
-        // create JWT token 
+        // Create JWT token
         const token = jwt.sign(
-            { userId: user.id}, // playload inside token
-            process.env.JWT_SECRET!, // secret key from environment variable
-            { expiresIn: "7d" } // token valid for 7 days
+            { 
+                userId: user.id,
+                email: user.email,
+                role: user.role 
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
         );
 
-        //success -> return user id, name and token
+        // Success response
         res.status(200).json({ 
-            message: "Login success",
+            success: true,
+            message: "Login successful",
             token,
             user: { 
                 id: user.id, 
@@ -46,7 +69,12 @@ export const loginUser = async (req: Request, res: Response) => {
             }
         });
 
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    } catch (error: any) {
+        console.error("Login error:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Internal server error",
+            error: process.env.NODE_ENV === "development" ? error.message : undefined
+        });
     }
 };

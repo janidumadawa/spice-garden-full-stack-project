@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
+
 const prisma = new PrismaClient();
 
 // create a cart for user (if not exists)
@@ -104,7 +105,7 @@ export const getCartItems = async (req: any, res: Response) => { // Use 'any' or
         let totalQuantity = 0;
         let totalPrice = 0;
         
-        items.forEach((item:any) => {
+        items.forEach((item) => {
             totalQuantity += item.quantity;
             totalPrice += item.quantity * item.unitPrice;
         });

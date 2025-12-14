@@ -2,6 +2,8 @@
 import { Request, Response } from "express"
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
+
 
 const prisma = new PrismaClient()
 
@@ -30,7 +32,7 @@ export const getUsers = async (req: Request, res: Response) => {
   const users = await prisma.user.findMany()
 
   // Remove passwords from response
-  const usersWithoutPasswords = users.map( (user: any) => {
+  const usersWithoutPasswords = users.map( (user: User) => {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   });
