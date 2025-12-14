@@ -6,6 +6,6 @@
   "framework": "nextjs",
   "outputDirectory": ".next",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://your-backend-app.up.railway.app/api"
+    "NEXT_PUBLIC_API_URL": "https://spice-garden-full-stack-project-production.up.railway.app/api"
   }
 }

@@ -20,7 +20,7 @@ const corsOptions = {
     origin:[
         "http://localhost:3000",//local development
         "https://spice-garden.vercel.app",//vercel url
-        "https://your-backend-app.railway.app" // Railway URL
+        "https://spice-garden-full-stack-project-production.up.railway.app" // Railway URL
     ],
     credentials:true,
     optionsSuccessStatus:200,
