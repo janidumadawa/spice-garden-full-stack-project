@@ -1,12 +1,37 @@
-// frontend/app/checkout/page.jsx
+// frontend/app/checkout/page.tsx  // Change from .jsx to .tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react"; // Added useRef
+import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthContext";
 import { useCart } from "../utils/CartContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { api } from "../utils/api";
+
+// ✅ Define TypeScript interfaces
+interface Address {
+  id: string;
+  userId: string;
+  street: string;
+  city: string;
+  zipCode: string;
+  isDefault: boolean;
+  createdAt: string;
+}
+
+interface CartItem {
+  id: string;
+  menuItem: {
+    name: string;
+  };
+  quantity: number;
+  unitPrice: number;
+}
+
+interface Cart {
+  items: CartItem[];
+  totalPrice: number;
+}
 
 export default function CheckoutPage() {
   const { isAuthenticated, user } = useAuth();
@@ -14,14 +39,14 @@ export default function CheckoutPage() {
   const router = useRouter();
   
   // State for addresses
-  const [addresses, setAddresses] = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState("");
-  const [useSavedAddress, setUseSavedAddress] = useState(true);
-  const [manualAddress, setManualAddress] = useState("");
-  const [notes, setNotes] = useState("");
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-  const [error, setError] = useState("");
-  const [hasPlacedOrder, setHasPlacedOrder] = useState(false); // NEW: Track if order placed
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [useSavedAddress, setUseSavedAddress] = useState<boolean>(true);
+  const [manualAddress, setManualAddress] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
+  const [isPlacingOrder, setIsPlacingOrder] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [hasPlacedOrder, setHasPlacedOrder] = useState<boolean>(false);
 
   // 🔧 FIX: Move redirects to useEffect but prevent after order
   useEffect(() => {
@@ -37,7 +62,7 @@ export default function CheckoutPage() {
       router.push("/cart");
       return;
     }
-  }, [isAuthenticated, loading, cart, router, hasPlacedOrder]); // Added hasPlacedOrder
+  }, [isAuthenticated, loading, cart, router, hasPlacedOrder]);
 
   // Fetch user addresses
   useEffect(() => {
@@ -51,8 +76,8 @@ export default function CheckoutPage() {
       const response = await api.get("/addresses");
       setAddresses(response.data);
       
-      // Set default address if exists
-      const defaultAddress = response.data.find(addr => addr.isDefault);
+      // ✅ FIXED: Add type annotation
+      const defaultAddress = response.data.find((addr: Address) => addr.isDefault);
       if (defaultAddress) {
         setSelectedAddressId(defaultAddress.id);
       }
@@ -97,7 +122,12 @@ export default function CheckoutPage() {
 
     try {
       // Prepare order data
-      const orderData = {
+      const orderData: {
+        notes: string;
+        paymentStatus: string;
+        addressId?: string;
+        address?: string;
+      } = {
         notes,
         paymentStatus: "pending",
       };
@@ -121,14 +151,13 @@ export default function CheckoutPage() {
       // Redirect to order confirmation
       router.push(`/order-confirmation?orderId=${response.data.orderId}`);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error placing order:", err);
       setError(err.response?.data?.error || "Failed to place order. Please try again.");
       setIsPlacingOrder(false);
     }
   };
 
-  // Rest of your JSX remains exactly the same...
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
@@ -138,7 +167,7 @@ export default function CheckoutPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           
-          {cart?.items.map((item) => (
+          {cart?.items.map((item: CartItem) => (
             <div key={item.id} className="flex justify-between py-3 border-b">
               <div>
                 <p className="font-medium">{item.menuItem.name}</p>
@@ -192,7 +221,7 @@ export default function CheckoutPage() {
                   required
                 >
                   <option value="">Choose an address</option>
-                  {addresses.map(address => (
+                  {addresses.map((address: Address) => (
                     <option key={address.id} value={address.id}>
                       {address.street}, {address.city} {address.zipCode}
                       {address.isDefault && " (Default)"}
