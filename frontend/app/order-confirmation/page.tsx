@@ -1,7 +1,6 @@
-// frontend/app/order-confirmation/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../utils/AuthContext";
 import { api } from "../utils/api";
@@ -30,7 +29,7 @@ interface Order {
   items: OrderItem[];
 }
 
-export default function OrderConfirmationPage() {
+function OrderConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated } = useAuth();
@@ -89,7 +88,6 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Success Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
           <CheckCircle className="w-12 h-12 text-green-600" />
@@ -104,7 +102,6 @@ export default function OrderConfirmationPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {/* Order Details */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <Package className="w-5 h-5 mr-2" />
@@ -150,7 +147,6 @@ export default function OrderConfirmationPage() {
           </div>
         </div>
 
-        {/* Delivery Information */}
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">Delivery Information</h2>
@@ -181,7 +177,6 @@ export default function OrderConfirmationPage() {
             </div>
           </div>
 
-          {/* Next Steps */}
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
             <h3 className="font-semibold text-blue-800 mb-2">What's Next?</h3>
             <ul className="space-y-2 text-sm text-blue-700">
@@ -192,7 +187,6 @@ export default function OrderConfirmationPage() {
             </ul>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/"
@@ -212,5 +206,17 @@ export default function OrderConfirmationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p>Loading order details...</p>
+      </div>
+    }>
+      <OrderConfirmationContent />
+    </Suspense>
   );
 }
