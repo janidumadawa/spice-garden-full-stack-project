@@ -19,7 +19,7 @@ const app = express()
 const corsOptions = {
     origin:[
         "http://localhost:3000",//local development
-        "https://spice-garden.vercel.app",//vercel url
+        "https://spicegardenresturent.vercel.app",//vercel url
         "https://spice-garden-full-stack-project-production.up.railway.app" // Railway URL
     ],
     credentials:true,
