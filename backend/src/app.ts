@@ -19,7 +19,8 @@ const app = express()
 const corsOptions = {
     origin:[
         "http://localhost:3000",//local development
-        "https://spice-garden.vercel.app"//vercel url
+        "https://spice-garden.vercel.app",//vercel url
+        "https://your-backend-app.railway.app" // Railway URL
     ],
     credentials:true,
     optionsSuccessStatus:200,
@@ -37,5 +38,15 @@ app.use("/api/addresses", addressRoutes)
 
 app.use("/api/admin", adminRoutes)
 // ...other routes
+
+
+// DEFAULT ROUTE
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Spice Garden API", 
+    status: "running",
+    docs: "/api/users, /api/menu-items, etc."
+  });
+});
 
 export default app;
